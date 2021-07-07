@@ -9,8 +9,9 @@ module.exports = {
   devServer: {
     publicPath: '/build',
     port: 8080,
+    contentBase: path.join(__dirname, './client'),
     proxy: {
-      '/api': 'http://localhost:3000'
+      '/': 'http://localhost:3000'
     },
   },
   module: {
@@ -27,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
