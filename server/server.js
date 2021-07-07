@@ -14,6 +14,9 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 
+// Router Imports
+const db = require('./models/models');
+
 const app = express();
 const PORT = 3000;
 
@@ -24,6 +27,7 @@ app.use(cookieParser()); // parse cookie header and populate the property req.co
 
 /** ****************** Server Route Handlers *********************** */
 
+// Note: we wrap these two handlers in an if statement, because when we run in webpack in development, the index.html is served by localhost:8000 not localhost:3000 - Therefore, there's no need to serve up static files when running in development
 if (process.env.NODE_ENV === 'production'){
   app.use('/build', express.static(path.join(__dirname, '../build')));
   app.get('/', (req, res) => {
