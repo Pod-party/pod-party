@@ -11,7 +11,7 @@ module.exports = {
     port: 8080,
     contentBase: path.join(__dirname, './client'),
     proxy: {
-      '/api': 'http://localhost:3000'
+      '/': 'http://localhost:3000'
     },
   },
   module: {
