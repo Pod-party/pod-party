@@ -11,10 +11,9 @@
 
 import React from 'react';
 import { render } from 'react-dom';
+import App from './App.jsx';
 
 render(
-  <div>
-    <h1>Hello from React</h1>
-  </div>
-  , document.getElementById('root')
+  <App />,
+  document.getElementById('root')
 );
