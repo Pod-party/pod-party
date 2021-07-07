@@ -35,7 +35,7 @@ const HomePage = (props) => {
       })
     })
       .then((res) => res.json())
-      .catch(res => console.log('Error in sending group'.res));
+      .catch(res => console.log('Error in sending group', res));
   }
 
   const handleGroup = (e) => {
