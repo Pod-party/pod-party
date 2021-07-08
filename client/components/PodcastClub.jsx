@@ -37,7 +37,7 @@ const PodcastClub = (props) => {
   // };
 
   const handlePodcast = (e) => {
-    addPodcast(e.target.value);
+    addNewPodcast(e.target.value);
   };
 
   const handleFriend = (e) => {
@@ -63,6 +63,11 @@ const PodcastClub = (props) => {
       .then((data) => {
         // setPodcasts(data);
         console.log('PODCASTS: ', data);
+        console.log('props.podcasts ', props.podcasts);
+        const copy = [...props.podcasts];
+        console.log('copy ', copy);
+        copy.push(data);
+        props.setPodcasts(copy);
       })
       .catch((err) => {
         console.log(err);
@@ -72,7 +77,7 @@ const PodcastClub = (props) => {
     <div style={{ width: '100%' }}>
       <Box display="flex" justifyContent="center" alignItems="center">
         <form id="PodcastForm" method="POST" action="/club/addPodcast">
-          <TextField label='group' name='group' variant="outlined" onChange={handlePodcast}></TextField>
+          <TextField label='podcast' name='podcast' variant="outlined" onChange={handlePodcast}></TextField>
           <Button type='button' variant="outlined" onClick={() => postPodcast()}>Add Podcast</Button>
         </form>
       </Box>

@@ -32,26 +32,25 @@ podcastsController.getPodcasts = (req, res, next) => {
 
 // POST A podcast
 podcastsController.addPodcast = (req, res, next) => {
-  // const { podcast_name, author, group_id } = req.body;
+  const { podcast_name, author, group_id } = req.body;
 
   console.log('ADD PODCAST ', req.body);
-  return next();
-  // const podcastPost = `INSERT INTO podcasts (podcast_name, author, group_id, created_at)
-  //  VALUES ($1, $2, $3, current_timestamp) RETURNING podcast_id;`;
+  const podcastPost = `INSERT INTO podcasts (podcast_name, author, group_id, created_at)
+   VALUES ($1, 'Cameron Simmons', $2, current_timestamp) RETURNING *;`;
 
-  // const params = [podcast_name, author, group_id];
+  const params = [podcast_name, group_id];
 
-  // db.query(podcastPost, params)
-  //   .then((data) => {
-  //     res.locals.podcast = data.rows[0];
-  //     return next();
-  //   })
-  //   .catch((err) =>
-  //     next({
-  //       log: `error in post podcasts controller: ${err}`,
-  //       message: { err: 'error occured in post podcasts controller' },
-  //     })
-  //   );
+  db.query(podcastPost, params)
+    .then((data) => {
+      res.locals.podcast = data.rows[0];
+      return next();
+    })
+    .catch((err) =>
+      next({
+        log: `error in post podcasts controller: ${err}`,
+        message: { err: 'error occured in post podcasts controller' },
+      })
+    );
 };
 
 //  DELETE A podcast
