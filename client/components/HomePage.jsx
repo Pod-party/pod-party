@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Button, TextField } from '@material-ui/core';
 import { flexbox } from '@material-ui/system';
 import Box from '@material-ui/core/Box';
+import NewClub from './NewClub.jsx';
 
 const HomePage = (props) => {
 
-  const [newGroup, addNewGroup] = useState('');
+  const [newClub, addNewClub] = useState('');
   const [clubs, setClubs] = useState([]);
 
   // useEffect(() => {
@@ -20,6 +21,7 @@ const HomePage = (props) => {
   //     })
   // }, [])
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -31,15 +33,16 @@ const HomePage = (props) => {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        newGroup
+
+        newClub
       })
     })
       .then((res) => res.json())
       .catch(res => console.log('Error in sending group', res));
   };
 
-  const handleGroup = (e) => {
-    addNewGroup(e.target.value);
+  const handleClub = (e) => {
+    addNewClub(e.target.value);
   };
 
   return (
@@ -47,10 +50,15 @@ const HomePage = (props) => {
     <div style={{ width: '100%' }}>
       <Box display="flex" justifyContent="center" alignItems="center">
         <form id="GroupForm" method="POST" action="/club/add" onSubmit={handleSubmit}>
-          <TextField label='group' name='group' variant="outlined" onChange={handleGroup}></TextField>
-          <Button type='submit' variant="outlined">Add Group</Button>
+          <TextField label='group' name='group' variant="outlined" onChange={handleClub}></TextField>
+          <Button type="submit" variant="outlined">Add Club</Button>
         </form>
       </Box>
+
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <h1>You added a new podcast club!</h1>
+      </Box>
+
     </div>
   );
 };

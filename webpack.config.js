@@ -11,13 +11,15 @@ module.exports = {
     port: 8080,
     contentBase: path.join(__dirname, './client'),
     proxy: {
-      '/api': 'http://localhost:3000'
+      '*': 'http://localhost:3000',
+      secure: false,
+      changeOrigin: true,
     },
   },
   module: {
     rules: [
       {
-        test: /\.jsx?/, 
+        test: /\.jsx?/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -31,6 +33,11 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
     ],
+  },
+  resolve: {
+    fallback: {
+      'path': require.resolve('path-browserify')
+    }
   },
   mode: process.env.NODE_ENV,
 };
