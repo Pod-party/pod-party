@@ -8,7 +8,7 @@ const HomePageContainer = (props) => {
       <h1>User Home Page</h1>
       <HomePage />
     </div>
-  )
-}
+  );
+};
 
 export default HomePageContainer;

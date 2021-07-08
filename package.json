@@ -40,7 +40,10 @@
     "google-auth-library": "^7.3.0",
     "googleapis": "^80.2.0",
     "jsonwebtoken": "^8.5.1",
+    "path-browserify": "^1.0.1",
     "pg": "^8.6.0",
-    "react-router": "^5.2.0"
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "util": "^0.12.4"
   }
 }
