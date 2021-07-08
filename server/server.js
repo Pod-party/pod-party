@@ -29,7 +29,9 @@ const apiRouter = require('./routes/apiRouter');
 // Controller Imports
 const oAuthController = require('./controllers/oAuthController');
 const userController = require('./controllers/usersController');
+const podcastsController = require('./controllers/podcastsController');
 const groupsController = require('./controllers/groupsController');
+const commentsController = require('./controllers/commentsController');
 
 const app = express();
 const PORT = 3000;
@@ -46,20 +48,20 @@ app.set('views', __dirname);
 /** ****************** Server Route Handlers *********************** */
 
 // Generate the Authentication Link and Render the index.ejs file to client
-app.get('/',
-  oAuthController.generateAuthUrl,
-  (req, res) => {
-    const { loginLink } = res.locals;
-    res.render(path.resolve(__dirname, '../client/index'), { loginLink });
-  });
+app.get('/', oAuthController.generateAuthUrl, (req, res) => {
+  const { loginLink } = res.locals;
+  res.render(path.resolve(__dirname, '../client/index'), { loginLink });
+});
 
-app.get('/auth_callback',
+app.get(
+  '/auth_callback',
   oAuthController.getToken,
   oAuthController.getUserData,
   userController.addUser,
   (req, res, next) => {
     return res.redirect('/home');
-  });
+  }
+);
 
 app.get('/home', (req, res) => {
   if (!req.cookies.jwt) {
@@ -84,11 +86,35 @@ app.get('/clubs',
     return res.status(200).json(res.locals.groups);
   });
 
+app.post('/podcasts', podcastsController.getPodcasts ,(req, res) => {
+  console.log('podcasts');
+  return res.status(200).json(res.locals.podcasts);
+});
+app.post('/adduser', userController.addUser, (req, res) => {
+  return res.status(200).json(res.locals.user);
+});
 
+app.post('/addpodcast', podcastsController.addPodcast, (req, res) => {
+  return res.status(200).json(res.locals.podcast);
+});
+
+app.delete('/deletepodcast',podcastsController.deletePodcast,(req, res) => {
+  return res.status(200).json(res.locals.podcast);
+}
+);
+
+app.post('/addgroup', groupsController.addGroup, (req, res) => {
+  return res.status(200).json(res.locals.group);
+});
+
+app.delete('/deletegroup',groupsController.deleteGroup,(req, res) => {
+  return res.status(200).json(res.locals.group);
+}
+);
 
 // Unknown Endpoint Error Handler
 app.use('/', (req, res) => {
-  return res.status(404).json('404 Not Found');
+  return res.status(404).json('404 Endpoint Not Found');
 });
 
 // Global Error Handler

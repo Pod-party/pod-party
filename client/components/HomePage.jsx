@@ -14,11 +14,35 @@ const HomePage = (props) => {
   const [routesArray, setRoutesArray] = useState([]);
   const [clubsArray, setClubsArray] = useState([]);
   const [linksArray, setLinksArray] = useState([]);
+  const [podcasts, setPodcasts ] = useState([]);
 
   const addClub = () => {
-    const copy = [...clubs];
-    copy.push(newClub);
-    setClubs(copy);
+
+    fetch('/addgroup',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          group_name: newClub
+        })
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        const copy = [...clubs];
+        copy.push(data);
+        setClubs(copy);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // const copy = [...clubs];
+    // copy.push(newClub);
+    // setClubs(copy);
   };
 
 
@@ -34,12 +58,12 @@ const HomePage = (props) => {
       console.log(club);
       tempRoutesArray.push(
         <Route exact path={`/${club.group_name}`}>
-          <ClubPageContainer name={club.group_name} clubId={club.group_id} />
+          <ClubPageContainer name={club.group_name} groupId={club.group_id} />
         </Route>);
       tempLinksArray.push(
-        <div>
+        <li>
           <Link to={`/${club.group_name}`}>{club.group_name}</Link>
-        </div>);
+        </li>);
     }
     setRoutesArray(tempRoutesArray);
     setClubsArray(tempClubsArray);
@@ -74,7 +98,18 @@ const HomePage = (props) => {
     renderClubs();
   }, [ clubs ]);
 
-
+  // useEffect(() => {
+  //   fetch('/podcasts')
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       console.log('PODCASTS: ', data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
   console.log(email);
 
   const handleSubmit = (e) => {
@@ -112,7 +147,9 @@ const HomePage = (props) => {
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         <Router>
-          {linksArray}
+          <ul>
+            {linksArray}
+          </ul>
           <Switch>
             {routesArray}
           </Switch>

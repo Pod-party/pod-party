@@ -30,15 +30,15 @@ groupsController.getGroups = (req, res, next) => {
  
 // POST A GROUP
 groupsController.addGroup = (req, res, next) => {
-  const {group_name, created_at} = req.body;
-     
-  const groupPost = `INSERT INTO groups (group_name, created_at)
-   VALUES ($1, $2);`;
+  const {group_name } = req.body;
+  console.log(group_name);
+  const groupPost = 'INSERT INTO groups (group_name, created_at) VALUES ($1, current_timestamp) RETURNING *';
  
-  const params = [group_name, created_at];
+  const params = [group_name];
  
   db.query(groupPost, params)
     .then((data) => {
+      console.log('data ', data.rows[0]);
       res.locals.group = data.rows[0];
       return next();
     })
@@ -53,13 +53,14 @@ groupsController.deleteGroup = (req, res, next) => {
   const {group_id} = req.body;
      
   const groupDelete = `DELETE FROM groups
-   WHERE group_id = $1;`;
+   WHERE group_id = $1 RETURNING group_id;`;
  
   const params = [group_id];
  
   db.query(groupDelete, params)
     .then((data) => {
       console.log('successfully deleted group');
+      res.locals.group = data.rows[0];
       return next();
     })
     .catch((err) => next({
