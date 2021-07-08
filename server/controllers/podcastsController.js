@@ -14,9 +14,9 @@ const podcastsController = {};
 // GET ALL podcastS
 podcastsController.getPodcasts = (req, res, next) => {
   const podcastQuery = 'SELECT * FROM podcasts WHERE group_id = $1';
-	const { group_id } = req.body;
-	const parameters = [group_id];
-	console.log('GET PODCASTS' , group_id);
+  const { group_id } = req.body;
+  const parameters = [group_id];
+  console.log('GET PODCASTS' , group_id);
   db.query(podcastQuery, parameters)
     .then((data) => {
       res.locals.podcasts = data.rows;
@@ -34,8 +34,8 @@ podcastsController.getPodcasts = (req, res, next) => {
 podcastsController.addPodcast = (req, res, next) => {
   // const { podcast_name, author, group_id } = req.body;
 
-	console.log('ADD PODCAST ', req.body);
-	return next();
+  console.log('ADD PODCAST ', req.body);
+  return next();
   // const podcastPost = `INSERT INTO podcasts (podcast_name, author, group_id, created_at)
   //  VALUES ($1, $2, $3, current_timestamp) RETURNING podcast_id;`;
 
