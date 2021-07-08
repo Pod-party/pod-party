@@ -81,9 +81,7 @@ app.get('/home', (req, res) => {
   return res.render(path.resolve(__dirname, '../client/home'));
 });
 
-app.get('/clubs',
-  groupsController.getGroups,
-  (req, res) => {
+app.get('/clubs', groupsController.getGroups, (req, res) => {
     return res.status(200).json(res.locals.groups);
   });
 
@@ -113,6 +111,10 @@ app.delete('/deletegroup',groupsController.deleteGroup,(req, res) => {
 }
 );
 
+app.get('/getcomments', commentsController.getComments, (req, res) => {
+	return res.status(200).json(res.locals.comments);
+});
+
 app.post('/addcomment', commentsController.addComment, (req, res) => {
 	return res.status(200).json(res.locals.comment);
 });
@@ -123,7 +125,7 @@ app.delete('/deletecomment',commentsController.deleteComment,(req, res) => {
 );
 
 app.post('/addupvote', votesController.upvote, (req, res) => {
-	return res.status(200).json(res.locals.vote);
+  return res.status(200).json(res.locals.vote);
 });
 
 app.post('/adddownvote', votesController.downvote, (req, res) => {

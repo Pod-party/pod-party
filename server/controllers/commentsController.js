@@ -13,10 +13,12 @@ const commentsController = {};
  
 // GET ALL COMMENTS
 commentsController.getComments = (req, res, next) => {
+  const {group_id} = req.body;
+  const commentQuery = `SELECT * FROM comments 
+  WHERE group_id = $1 LIMIT 100;`;
   
-  const commentQuery = 'SELECT * FROM "public"."comments" LIMIT 100';
-  
-  db.query(commentQuery)
+  const params = [group_id];
+  db.query(commentQuery,params)
     .then((data) => {
       res.locals.comments = data.rows;
       return next();
