@@ -32,7 +32,7 @@ groupsController.addGroup = (req, res, next) => {
   const {group_name, created_at} = req.body;
      
   const groupPost = `INSERT INTO groups (group_name, created_at)
-   VALUES ($1, $2);`;
+   VALUES ($1, $2) RETURNING group_id;`;
  
   const params = [group_name, created_at];
  
@@ -52,13 +52,14 @@ groupsController.deleteGroup = (req, res, next) => {
   const {group_id} = req.body;
      
   const groupDelete = `DELETE FROM groups
-   WHERE group_id = $1;`;
+   WHERE group_id = $1 RETURNING group_id;`;
  
   const params = [group_id];
  
   db.query(groupDelete, params)
     .then((data) => {
       console.log('successfully deleted group');
+      res.locals.group = data.rows[0];
       return next();
     })
     .catch((err) => next({
