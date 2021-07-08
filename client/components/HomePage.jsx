@@ -3,23 +3,34 @@ import { Button, TextField } from '@material-ui/core';
 import { flexbox } from '@material-ui/system';
 import Box from '@material-ui/core/Box';
 import NewClub from './NewClub.jsx';
+import ClubPageContainer from '../containers/ClubPageContainer.jsx';
+import { Switch, Route, Link, BrowserRouter as Router } from 'react-router-dom';
 
 const HomePage = (props) => {
 
   const [newClub, addNewClub] = useState('');
   const [clubs, setClubs] = useState([]);
 
-  // useEffect(() => {
-  //   fetch('/club')
-  //     .then((res) => res.json())
-  //     .then(data => {
-  //       let groups = [];
-  //       data.forEach(element => groups.push(element.name))
-  //     })
-  //     .catch((err) => {
-  //       console.log('Error in getting clubs', err);
-  //     })
-  // }, [])
+  const addClub = () => {
+    const copy = [...clubs];
+    copy.push(newClub);
+    setClubs(copy);
+  };
+
+  const routesArray = [];
+  const clubsArray = [];
+  const linksArray = [];
+  for (const club of clubs) {
+    routesArray.push(
+      <Route exact path={`/${club}`}>
+        <ClubPageContainer name={club}/>
+      </Route>);
+    clubsArray.push(<NewClub name={club} />);
+    linksArray.push(
+      <div>
+        <Link to={`/${club}`}>{club}</Link>
+      </div>);
+  }
 
 
   const handleSubmit = (e) => {
@@ -27,8 +38,8 @@ const HomePage = (props) => {
 
     const form = e.target;
 
-    fetch(form.action, {
-      method: form.action,
+    fetch('club/add', {
+      method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
@@ -42,6 +53,7 @@ const HomePage = (props) => {
   };
 
   const handleClub = (e) => {
+    // console.log(e.target.value);
     addNewClub(e.target.value);
   };
 
@@ -50,15 +62,27 @@ const HomePage = (props) => {
     <div style={{ width: '100%' }}>
       <Box display="flex" justifyContent="center" alignItems="center">
         <form id="GroupForm" method="POST" action="/club/add" onSubmit={handleSubmit}>
-          <TextField label='group' name='group' variant="outlined" onChange={handleClub}></TextField>
-          <Button type="submit" variant="outlined">Add Club</Button>
+          <TextField label='club' name='club' variant="outlined" onChange={handleClub}></TextField>
+          <Button type="button" variant="outlined" onClick={() => addClub()}>Add Club</Button>
         </form>
       </Box>
-
       <Box display="flex" justifyContent="center" alignItems="center">
-        <h1>You added a new podcast club!</h1>
+        <Router>
+          {/* <Link to='/basketball'>basketball</Link> */}
+          {linksArray}
+          <Switch>
+            <Route exact path='/basketball'>
+              <h1>BASKETBALL</h1>
+            </Route>
+            {routesArray}
+            {/* <Route exact path='/yo'>
+              <h1>YOOOOOOO</h1>
+              <ClubPageContainer />
+            </Route> */}
+          </Switch>
+        </Router>
       </Box>
-
+      {/* {clubsArray} */}
     </div>
   );
 };

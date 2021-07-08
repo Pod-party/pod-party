@@ -10,3 +10,10 @@
  */
 const express = require('express');
 const router = express.Router();
+
+const commentsController = require('../controllers/commentsController');
+const groupsController = require('../controllers/groupsController');
+const podcastsController = require('../controllers/podcastsController');
+const votesController = require('../controllers/votesController');
+const userController = require('../controllers/usersController');
+

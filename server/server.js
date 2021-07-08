@@ -14,15 +14,15 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const google = require('googleapis').google;
 const jwt = require('jsonwebtoken');
+
 // Google's OAuth2 client
 const OAuth2 = google.auth.OAuth2;
-
-// Including our config file
+// Including our Oauth2 config file
 const CONFIG = require('../config');
 
 // Router Imports
 const db = require('./models/models');
-const loginRouter = require('./routes/loginRouter');
+const apiRouter = require('./routes/apiRouter');
 
 const app = express();
 const PORT = 3000;
@@ -67,7 +67,7 @@ app.get('/auth_callback', (req, res) => {
   } else {
     oauth2Client.getToken(req.query.code, function (err, token) {
       if (err) return res.redirect('/');
-
+      console.log('TOKEN: ', token);
       // Store the credentials given by google into a jsonwebtoken in a cookie called 'jwt'
       res.cookie('jwt', jwt.sign(token, CONFIG.JWTsecret));
       
@@ -87,32 +87,11 @@ app.get('/home', (req, res) => {
     CONFIG.oauth2Credentials.client_secret,
     CONFIG.oauth2Credentials.redirect_uris[0]
   );
-  console.log('oauth2Client ===========================',oauth2Client);
   // Add this specific user's credentials to our OAuth2 client
   oauth2Client.credentials = jwt.verify(req.cookies.jwt, CONFIG.JWTsecret);
-  console.log('oauth2Client ===========================',oauth2Client);
-  // const birthday = google.people()
+ 
   return res.render(path.resolve(__dirname, '../client/home'));
 });
-
-// if (process.env.NODE_ENV === 'production') {
-// 	app.use('/build', express.static(path.join(__dirname, '../build')));
-// 	app.get('/', (req, res) => {
-// 		// Create an OAuth2 client object from the credentials in our config file
-// 		const oauth2Client = new OAuth2(
-// 			CONFIG.oauth2Credentials.client_id,
-// 			CONFIG.oauth2Credentials.client_secret,
-// 			CONFIG.oauth2Credentials.redirect_uris[0]
-// 		);
-// 		// Obtain the google login link to which we'll send our users to give us access
-// 		const loginLink = oauth2Client.generateAuthUrl({
-// 			access_type: 'offline', // Indicates that we need to be able to access data continously without the user constantly giving us consent
-// 			scope: CONFIG.oauth2Credentials.scopes, // Using the access scopes from our config file
-// 		});
-
-// 		res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
-// 	});
-// }
 
 // Unknown Endpoint Error Handler
 app.use('/', (req, res) => {
