@@ -8,7 +8,7 @@ const LoginContainer = (props) => {
       <h1>Login Page</h1>
       <LoginPage />
     </div>
-  )
-}
+  );
+};
 
 export default LoginContainer;
