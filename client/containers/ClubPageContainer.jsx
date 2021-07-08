@@ -11,7 +11,7 @@ const ClubPageContainer = (props) => {
       <h1>{props.name} Podcast Club</h1>
       <PodcastClub />
       <GroupChat />
-      {/* <PodcastContainer /> */}
+      <PodcastContainer />
     </div>
   );
 };

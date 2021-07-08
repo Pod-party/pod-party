@@ -10,6 +10,10 @@ const HomePage = (props) => {
 
   const [newClub, addNewClub] = useState('');
   const [clubs, setClubs] = useState([]);
+  const [email, setEmail] = useState('');
+  const [routesArray, setRoutesArray] = useState([]);
+  const [clubsArray, setClubsArray] = useState([]);
+  const [linksArray, setLinksArray] = useState([]);
 
   const addClub = () => {
     const copy = [...clubs];
@@ -17,21 +21,61 @@ const HomePage = (props) => {
     setClubs(copy);
   };
 
-  const routesArray = [];
-  const clubsArray = [];
-  const linksArray = [];
-  for (const club of clubs) {
-    routesArray.push(
-      <Route exact path={`/${club}`}>
-        <ClubPageContainer name={club}/>
-      </Route>);
-    clubsArray.push(<NewClub name={club} />);
-    linksArray.push(
-      <div>
-        <Link to={`/${club}`}>{club}</Link>
-      </div>);
-  }
 
+  const renderClubs = (data) => {
+
+    const tempRoutesArray = [];
+    const tempClubsArray = [];
+    const tempLinksArray = [];
+
+    console.log('inside renderClubs ', data);
+    for (const club of data) {
+      // note: club is now an object with properties, club_id, club_name
+      tempRoutesArray.push(
+        <Route exact path={`/${data.club_name}`}>
+          <ClubPageContainer name={data.club_name} clubId={data.club_id} />
+        </Route>);
+      tempClubsArray.push(<NewClub name={data.club_name} />);
+      tempLinksArray.push(
+        <div>
+          <Link to={`/${data.club_name}`}>{data.club_name}</Link>
+        </div>);
+    }
+    setRoutesArray(tempRoutesArray);
+    setClubsArray(tempClubsArray);
+    setLinksArray(tempLinksArray);
+    console.log('inside renderClubs, routesArray ', routesArray);
+    console.log('inside renderClubs, routesArray ', clubsArray);
+    console.log('inside renderClubs, routesArray ', linksArray);
+  };
+
+  useEffect(() => {
+    const cookieEmail = document.cookie.split('; ').find(row => row.startsWith('email='))
+      .split('=')[1].replace('%40', '@');
+    setEmail(cookieEmail);
+  }, []);
+
+  useEffect(() => {
+    fetch('/clubs')
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setClubs(data);
+        console.log('AFTER setClubs ', clubs);
+        return data;
+      }).then((data) => {
+        console.log('before we invoke renderClubs ', clubs);
+        renderClubs(data);
+      })
+      .catch(res => console.log('Error in getting clubs', res));
+  }, []);
+
+  // useEffect(() => {
+  //   renderClubs();
+  // });
+
+
+  console.log(email);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,11 +93,10 @@ const HomePage = (props) => {
       })
     })
       .then((res) => res.json())
-      .catch(res => console.log('Error in sending group', res));
+      .catch(res => console.log('Error in sending clubs', res));
   };
 
   const handleClub = (e) => {
-    // console.log(e.target.value);
     addNewClub(e.target.value);
   };
 

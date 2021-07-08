@@ -29,6 +29,7 @@ const apiRouter = require('./routes/apiRouter');
 // Controller Imports
 const oAuthController = require('./controllers/oAuthController');
 const userController = require('./controllers/usersController');
+const groupsController = require('./controllers/groupsController');
 
 const app = express();
 const PORT = 3000;
@@ -45,15 +46,15 @@ app.set('views', __dirname);
 /** ****************** Server Route Handlers *********************** */
 
 // Generate the Authentication Link and Render the index.ejs file to client
-app.get('/', 
+app.get('/',
   oAuthController.generateAuthUrl,
   (req, res) => {
     const { loginLink } = res.locals;
     res.render(path.resolve(__dirname, '../client/index'), { loginLink });
   });
 
-app.get('/auth_callback', 
-  oAuthController.getToken, 
+app.get('/auth_callback',
+  oAuthController.getToken,
   oAuthController.getUserData,
   userController.addUser,
   (req, res, next) => {
@@ -73,9 +74,17 @@ app.get('/home', (req, res) => {
   );
   // Add this specific user's credentials to our OAuth2 client
   oauth2Client.credentials = jwt.verify(req.cookies.jwt, CONFIG.JWTsecret);
- 
+
   return res.render(path.resolve(__dirname, '../client/home'));
 });
+
+app.get('/clubs',
+  groupsController.getGroups,
+  (req, res) => {
+    return res.status(200).json(res.locals.groups);
+  });
+
+
 
 // Unknown Endpoint Error Handler
 app.use('/', (req, res) => {
