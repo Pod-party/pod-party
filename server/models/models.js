@@ -12,7 +12,7 @@
 const { Pool } = require('pg');
 
 // Copy postgreSQL database connection URI below
-const PG_URI = '';
+const PG_URI = 'postgres://gmftnkge:bKfvlzi22eyRJRPBko9UhPqWIjWUnOJK@batyr.db.elephantsql.com/gmftnkge';
  
 // Initialize pool connection
 const pool = new Pool({
