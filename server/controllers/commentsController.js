@@ -13,10 +13,12 @@ const commentsController = {};
  
 // GET ALL COMMENTS
 commentsController.getComments = (req, res, next) => {
+  const {group_id} = req.body;
+  const commentQuery = `SELECT * FROM comments 
+  WHERE group_id = $1 LIMIT 100;`;
   
-  const commentQuery = 'SELECT * FROM "public"."comments" LIMIT 100';
-  
-  db.query(commentQuery)
+  const params = [group_id];
+  db.query(commentQuery,params)
     .then((data) => {
       res.locals.comments = data.rows;
       return next();
@@ -28,11 +30,11 @@ commentsController.getComments = (req, res, next) => {
 };
 
 // POST A COMMENT
-commentsController.addComments = (req, res, next) => {
+commentsController.addComment = (req, res, next) => {
   const {comment, group_id, user_id, created_at} = req.body;
     
   const commentPost = `INSERT INTO comments (comment, group_id, user_id, created_at)
-    VALUES ($1, $2, $3, $4);`;
+    VALUES ($1, $2, $3, $4) RETURNING comment_id;`;
 
   const params = [comment, group_id, user_id, created_at];
 
@@ -52,12 +54,13 @@ commentsController.deleteComment = (req, res, next) => {
   const {comment_id} = req.body;
     
   const commentDelete = `DELETE FROM comments
-  WHERE comment_id = $1;`;
+  WHERE comment_id = $1 RETURNING comment_id;`;
 
   const params = [comment_id];
 
   db.query(commentDelete, params)
     .then((data) => {
+      res.locals.comment = data.rows[0];
       console.log('successfully deleted comment');
       return next();
     })
