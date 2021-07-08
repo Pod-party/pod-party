@@ -82,8 +82,8 @@ app.get('/home', (req, res) => {
 });
 
 app.get('/clubs', groupsController.getGroups, (req, res) => {
-    return res.status(200).json(res.locals.groups);
-  });
+  return res.status(200).json(res.locals.groups);
+});
 
 app.post('/podcasts', podcastsController.getPodcasts ,(req, res) => {
   console.log('podcasts');
@@ -116,7 +116,7 @@ app.delete('/deletegroup',groupsController.deleteGroup,(req, res) => {
 }
 );
 
-app.get('/getcomments', commentsController.getComments, (req, res) => {
+app.post('/getcomments', commentsController.getComments, (req, res) => {
 	return res.status(200).json(res.locals.comments);
 });
 
