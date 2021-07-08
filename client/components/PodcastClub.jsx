@@ -7,8 +7,15 @@ import PodcastContainer from '../containers/PodcastContainer.jsx';
 const PodcastClub = (props) => {
 
   // added podcast state needs to be passed down to podcast component to be displayed
-  const [podcast, addPodcast] = useState('');
+  const [newPodcast, addNewPodcast] = useState('');
+  const [podcast, setPodcast] = useState([]);
   const [friends, addFriend] = useState('');
+
+  const addPodcast = () => {
+    const copy = [...podcast];
+    copy.push(newPodcast);
+    setPodcast(copy);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

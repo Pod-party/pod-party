@@ -10,7 +10,7 @@ const ClubPageContainer = (prop) => {
       <h1>Team Geodude Podcast Club</h1>
       <PodcastClub />
       <GroupChat />
-      {/* <PodcastContainer /> */}
+      <PodcastContainer />
     </div>
   );
 };
