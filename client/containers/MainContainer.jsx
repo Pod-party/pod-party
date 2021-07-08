@@ -16,13 +16,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 const MainContainer = (props) => {
 
   return (
-    // <div>
-    //   {/* <UserContext.Provider> */}
-    //   <LoginContainer />
-    //   <HomePageContainer />
-    //   <ClubPageContainer />
-    //   {/* </UserContext.Provider> */}
-    // </div>
     <div>
       <HomePageContainer />
       {/* <Router>

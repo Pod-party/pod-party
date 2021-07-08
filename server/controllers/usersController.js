@@ -29,14 +29,18 @@ usersController.getUsers = (req, res, next) => {
  
 // POST A user
 usersController.addUser = (req, res, next) => {
-  const {username, email, first_name, last_name, nickname, created_at} = req.body;
-     
-  const userPost = `INSERT INTO users (username, email, first_name, last_name, nickname, created_at)
-   VALUES ($1, $2, $3, $4, $5, $6);`;
+  const { userData } = res.locals;
+  const { email } = userData;
+  const first_name = userData.given_name;
+  const last_name = userData.family_name;
+
+  console.log(email, first_name, last_name);
+
+  const query = 'INSERT INTO users (email, first_name, last_name, created_at) VALUES ($1, $2, $3, current_timestamp) ON CONFLICT DO NOTHING;';
  
-  const params = [username, email, first_name, last_name, nickname, created_at];
+  const params = [email, first_name, last_name];
  
-  db.query(userPost, params)
+  db.query(query, params)
     .then((data) => {
       res.locals.user = data.rows[0];
       return next();

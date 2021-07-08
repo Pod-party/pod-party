@@ -14,15 +14,21 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const google = require('googleapis').google;
 const jwt = require('jsonwebtoken');
+const fetch = require('node-fetch');
 
 // Google's OAuth2 client
 const OAuth2 = google.auth.OAuth2;
+
 // Including our Oauth2 config file
 const CONFIG = require('../config');
 
 // Router Imports
 const db = require('./models/models');
 const apiRouter = require('./routes/apiRouter');
+
+// Controller Imports
+const oAuthController = require('./controllers/oAuthController');
+const userController = require('./controllers/usersController');
 
 const app = express();
 const PORT = 3000;
@@ -35,46 +41,24 @@ app.use(cookieParser()); // parse cookie header and populate the property req.co
 // Setting up EJS Views
 app.set('view engine', 'ejs');
 app.set('views', __dirname);
+
 /** ****************** Server Route Handlers *********************** */
 
-// Note: we wrap these two handlers in an if statement, because when we run in webpack in development, the index.html is served by localhost:8000 not localhost:3000 - Therefore, there's no need to serve up static files when running in development
-
-app.get('/', (req, res) => {
-  const oauth2Client = new OAuth2(
-    CONFIG.oauth2Credentials.client_id,
-    CONFIG.oauth2Credentials.client_secret,
-    CONFIG.oauth2Credentials.redirect_uris[0]
-  );
-  // Obtain the google login link to which we'll send our users to give us access
-  const loginLink = oauth2Client.generateAuthUrl({
-    access_type: 'offline', // Indicates that we need to be able to access data continously without the user constantly giving us consent
-    scope: CONFIG.oauth2Credentials.scopes, // Using the access scopes from our config file
+// Generate the Authentication Link and Render the index.ejs file to client
+app.get('/', 
+  oAuthController.generateAuthUrl,
+  (req, res) => {
+    const { loginLink } = res.locals;
+    res.render(path.resolve(__dirname, '../client/index'), { loginLink });
   });
 
-  res.render(path.resolve(__dirname, '../client/index'), { loginLink });
-});
-
-app.get('/auth_callback', (req, res) => {
-  const oauth2Client = new OAuth2(
-    CONFIG.oauth2Credentials.client_id,
-    CONFIG.oauth2Credentials.client_secret,
-    CONFIG.oauth2Credentials.redirect_uris[0]
-  );
-  
-  if (req.query.error) {
-    // The user did not give us permission.
-    return res.redirect('/');
-  } else {
-    oauth2Client.getToken(req.query.code, function (err, token) {
-      if (err) return res.redirect('/');
-
-      // Store the credentials given by google into a jsonwebtoken in a cookie called 'jwt'
-      res.cookie('jwt', jwt.sign(token, CONFIG.JWTsecret));
-      
-      return res.redirect('/home');
-    });
-  }
-});
+app.get('/auth_callback', 
+  oAuthController.getToken, 
+  oAuthController.getUserData,
+  userController.addUser,
+  (req, res, next) => {
+    return res.redirect('/home');
+  });
 
 app.get('/home', (req, res) => {
   if (!req.cookies.jwt) {
