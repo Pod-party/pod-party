@@ -31,12 +31,12 @@ const HomePage = (props) => {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        group
+        newGroup
       })
     })
       .then((res) => res.json())
-      .catch(res => console.log('Error in sending group'.res));
-  }
+      .catch(res => console.log('Error in sending group',res));
+  };
 
   const handleGroup = (e) => {
     addNewGroup(e.target.value);
@@ -52,7 +52,7 @@ const HomePage = (props) => {
         </form>
       </Box>
     </div>
-  )
-}
+  );
+};
 
 export default HomePage;
