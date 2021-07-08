@@ -28,13 +28,34 @@ votesController.getVotes = (req, res, next) => {
 };
  
 // up vote
-votesController.upVote = (req, res, next) => {
-  const {podcast_id, user_id, vote_type} = req.body;
+votesController.upvote = (req, res, next) => {
+  const {podcast_id, user_id} = req.body;
      
   const votePost = `INSERT INTO votes (podcast_id, user_id, vote_type)
-   VALUES ($1, $2, "upvote");`;
+   VALUES ($1, $2, 'upvote') RETURNING vote_id;`;
  
-  const params = [podcast_id, user_id, vote_type];
+  const params = [podcast_id, user_id];
+ 
+  db.query(votePost, params)
+    .then((data) => {
+      console.log(data);
+      res.locals.vote = data.rows[0];
+      return next();
+    })
+    .catch((err) => next({
+      log:`error in post votes controller: ${err}`,
+      message: {err: 'error occured in post votes controller'}
+    }));
+};
+
+// up vote
+votesController.downvote = (req, res, next) => {
+  const {podcast_id, user_id} = req.body;
+     
+  const votePost = `INSERT INTO votes (podcast_id, user_id, vote_type)
+   VALUES ($1, $2, 'downvote') RETURNING vote_id;`;
+ 
+  const params = [podcast_id, user_id];
  
   db.query(votePost, params)
     .then((data) => {
@@ -49,12 +70,12 @@ votesController.upVote = (req, res, next) => {
  
 //  Down vote
 votesController.deleteVote = (req, res, next) => {
-  const {podcast_id, user_id, vote_type} = req.body;
+  const {vote_id} = req.body;
     
-  const voteDelete = `INSERT INTO votes (podcast_id, user_id, vote_type)
-  VALUES ($1, $2, "null");`;
+  const voteDelete = `DELETE FROM votes 
+  WHERE vote_id = $1 RETURNING vote_id;`;
 
-  const params = [podcast_id, user_id, vote_type];
+  const params = [vote_id];
 
   db.query(voteDelete, params)
     .then((data) => {
