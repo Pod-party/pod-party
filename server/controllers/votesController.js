@@ -4,7 +4,67 @@
  * @module loginController.js
  * @author Andy Kahn, Angela Franco, Cameron Simmons, Lorenzo Guevara, Mika Todd
  * @date 7/6/2021
- * @description Contains middleware that handle user votes i.e. upvotes + downvotes 
+ * @description Contains middleware that handle user votes 
  *
  * ************************************
  */
+const db = require('../models/models');
+const votesController = {};
+  
+// GET ALL voteS
+votesController.getVotes = (req, res, next) => {
+   
+  const voteQuery = 'SELECT * FROM "public"."votes" LIMIT 100';
+   
+  db.query(voteQuery)
+    .then((data) => {
+      res.locals.votes = data.rows;
+      return next();
+    })
+    .catch((err) => next({
+      log:`error in get votes controller: ${err}`,
+      message: {err: 'error occured in get votes controller'}
+    }));
+};
+ 
+// up vote
+votesController.upVote = (req, res, next) => {
+  const {podcast_id, user_id, vote_type} = req.body;
+     
+  const votePost = `INSERT INTO votes (podcast_id, user_id, vote_type)
+   VALUES ($1, $2, "upvote");`;
+ 
+  const params = [podcast_id, user_id, vote_type];
+ 
+  db.query(votePost, params)
+    .then((data) => {
+      res.locals.vote = data.rows[0];
+      return next();
+    })
+    .catch((err) => next({
+      log:`error in post votes controller: ${err}`,
+      message: {err: 'error occured in post votes controller'}
+    }));
+};
+ 
+//  Down vote
+votesController.deleteVote = (req, res, next) => {
+  const {podcast_id, user_id, vote_type} = req.body;
+    
+  const voteDelete = `INSERT INTO votes (podcast_id, user_id, vote_type)
+  VALUES ($1, $2, "null");`;
+
+  const params = [podcast_id, user_id, vote_type];
+
+  db.query(voteDelete, params)
+    .then((data) => {
+      console.log('successfully deleted vote');
+      return next();
+    })
+    .catch((err) => next({
+      log:`error in post votes controller: ${err}`,
+      message: {err: 'error occured in post votes controller'}
+    }));
+};
+ 
+module.exports = votesController;
