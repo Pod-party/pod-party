@@ -22,23 +22,23 @@ const HomePage = (props) => {
   };
 
 
-  const renderClubs = (data) => {
+  const renderClubs = () => {
 
     const tempRoutesArray = [];
     const tempClubsArray = [];
     const tempLinksArray = [];
 
-    console.log('inside renderClubs ', data);
-    for (const club of data) {
+    console.log('inside renderClubs ', clubs);
+    for (const club of clubs) {
       // note: club is now an object with properties, club_id, club_name
+      console.log(club);
       tempRoutesArray.push(
-        <Route exact path={`/${data.club_name}`}>
-          <ClubPageContainer name={data.club_name} clubId={data.club_id} />
+        <Route exact path={`/${club.group_name}`}>
+          <ClubPageContainer name={club.group_name} clubId={club.group_id} />
         </Route>);
-      tempClubsArray.push(<NewClub name={data.club_name} />);
       tempLinksArray.push(
         <div>
-          <Link to={`/${data.club_name}`}>{data.club_name}</Link>
+          <Link to={`/${club.group_name}`}>{club.group_name}</Link>
         </div>);
     }
     setRoutesArray(tempRoutesArray);
@@ -65,14 +65,14 @@ const HomePage = (props) => {
         return data;
       }).then((data) => {
         console.log('before we invoke renderClubs ', clubs);
-        renderClubs(data);
+        // renderClubs(data);
       })
       .catch(res => console.log('Error in getting clubs', res));
   }, []);
 
-  // useEffect(() => {
-  //   renderClubs();
-  // });
+  useEffect(() => {
+    renderClubs();
+  }, [ clubs ]);
 
 
   console.log(email);
@@ -100,6 +100,7 @@ const HomePage = (props) => {
     addNewClub(e.target.value);
   };
 
+  console.log('Homepage rendered');
   return (
 
     <div style={{ width: '100%' }}>
