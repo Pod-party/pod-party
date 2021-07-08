@@ -56,6 +56,6 @@ const LoginPage = (props) => {
     </div>
 
   );
-}
+};
 
 export default LoginPage;
