@@ -34,9 +34,10 @@ usersController.addUser = (req, res, next) => {
   const first_name = userData.given_name;
   const last_name = userData.family_name;
 
+  // const {email, first_name, last_name} = req.body;
   console.log(email, first_name, last_name);
 
-  const query = 'INSERT INTO users (email, first_name, last_name, created_at) VALUES ($1, $2, $3, current_timestamp) ON CONFLICT DO NOTHING;';
+  const query = 'INSERT INTO users (email, first_name, last_name, created_at) VALUES ($1, $2, $3, current_timestamp) ON CONFLICT("email") DO UPDATE SET first_name=EXCLUDED.first_name RETURNING user_id;';
  
   const params = [email, first_name, last_name];
  
