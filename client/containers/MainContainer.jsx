@@ -24,7 +24,8 @@ const MainContainer = (props) => {
     //   {/* </UserContext.Provider> */}
     // </div>
     <div>
-      <Router>
+      <HomePageContainer />
+      {/* <Router>
         <ul>
           <li>
             <Link to="/home">Home</Link>
@@ -36,11 +37,11 @@ const MainContainer = (props) => {
         <Switch>
           <Route path="/" exact component={LoginContainer} />
           <Route path="/home" exact component={HomePageContainer} />
-          {/* <Route path='/club/page' exact component={PodcastClub} /> */}
-          <Route path="/club" exact component={ClubPageContainer} />
+          <Route path='/club/page' exact component={PodcastClub} />
+        <Route path="/club" exact component={ClubPageContainer} />
         </Switch>
-      </Router>
-    </div>
+      </Router> */}
+    </div >
   );
 };
 
