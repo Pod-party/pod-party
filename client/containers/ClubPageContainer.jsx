@@ -8,7 +8,7 @@ const ClubPageContainer = (props) => {
 
   return (
     <div>
-      <h1>Team {props.name} Podcast Club</h1>
+      <h1>{props.name} Podcast Club</h1>
       <PodcastClub />
       <GroupChat />
       {/* <PodcastContainer /> */}

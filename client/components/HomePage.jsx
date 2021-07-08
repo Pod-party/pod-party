@@ -68,21 +68,12 @@ const HomePage = (props) => {
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         <Router>
-          {/* <Link to='/basketball'>basketball</Link> */}
           {linksArray}
           <Switch>
-            <Route exact path='/basketball'>
-              <h1>BASKETBALL</h1>
-            </Route>
             {routesArray}
-            {/* <Route exact path='/yo'>
-              <h1>YOOOOOOO</h1>
-              <ClubPageContainer />
-            </Route> */}
           </Switch>
         </Router>
       </Box>
-      {/* {clubsArray} */}
     </div>
   );
 };
