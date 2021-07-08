@@ -14,32 +14,56 @@ const HomePage = (props) => {
   const [routesArray, setRoutesArray] = useState([]);
   const [clubsArray, setClubsArray] = useState([]);
   const [linksArray, setLinksArray] = useState([]);
+  const [podcasts, setPodcasts ] = useState([]);
 
   const addClub = () => {
-    const copy = [...clubs];
-    copy.push(newClub);
-    setClubs(copy);
+
+    fetch('/addgroup',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          group_name: newClub
+        })
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        const copy = [...clubs];
+        copy.push(data);
+        setClubs(copy);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // const copy = [...clubs];
+    // copy.push(newClub);
+    // setClubs(copy);
   };
 
 
-  const renderClubs = (data) => {
+  const renderClubs = () => {
 
     const tempRoutesArray = [];
     const tempClubsArray = [];
     const tempLinksArray = [];
 
-    console.log('inside renderClubs ', data);
-    for (const club of data) {
+    console.log('inside renderClubs ', clubs);
+    for (const club of clubs) {
       // note: club is now an object with properties, club_id, club_name
+      console.log(club);
       tempRoutesArray.push(
-        <Route exact path={`/${data.club_name}`}>
-          <ClubPageContainer name={data.club_name} clubId={data.club_id} />
+        <Route exact path={`/${club.group_name}`}>
+          <ClubPageContainer name={club.group_name} groupId={club.group_id} />
         </Route>);
-      tempClubsArray.push(<NewClub name={data.club_name} />);
       tempLinksArray.push(
-        <div>
-          <Link to={`/${data.club_name}`}>{data.club_name}</Link>
-        </div>);
+        <li>
+          <Link to={`/${club.group_name}`}>{club.group_name}</Link>
+        </li>);
     }
     setRoutesArray(tempRoutesArray);
     setClubsArray(tempClubsArray);
@@ -65,16 +89,27 @@ const HomePage = (props) => {
         return data;
       }).then((data) => {
         console.log('before we invoke renderClubs ', clubs);
-        renderClubs(data);
+        // renderClubs(data);
       })
       .catch(res => console.log('Error in getting clubs', res));
   }, []);
 
+  useEffect(() => {
+    renderClubs();
+  }, [ clubs ]);
+
   // useEffect(() => {
-  //   renderClubs();
-  // });
-
-
+  //   fetch('/podcasts')
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       console.log('PODCASTS: ', data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
   console.log(email);
 
   const handleSubmit = (e) => {
@@ -100,6 +135,7 @@ const HomePage = (props) => {
     addNewClub(e.target.value);
   };
 
+  console.log('Homepage rendered');
   return (
 
     <div style={{ width: '100%' }}>
@@ -111,7 +147,9 @@ const HomePage = (props) => {
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         <Router>
-          {linksArray}
+          <ul>
+            {linksArray}
+          </ul>
           <Switch>
             {routesArray}
           </Switch>
