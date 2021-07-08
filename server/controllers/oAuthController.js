@@ -77,7 +77,6 @@ oAuthController.getUserData = (req, res, next) => {
       res.cookie('last_name', data.family_name);
       res.cookie('picture', data.picture);
       res.locals.userData = data;
-      console.log('getUserData' , res.locals.userData);
       return next();
     });
 };

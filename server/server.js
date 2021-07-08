@@ -50,57 +50,67 @@ app.set('views', __dirname);
 
 // Generate the Authentication Link and Render the index.ejs file to client
 app.get('/', oAuthController.generateAuthUrl, (req, res) => {
-	const { loginLink } = res.locals;
-	res.render(path.resolve(__dirname, '../client/index'), { loginLink });
+  const { loginLink } = res.locals;
+  res.render(path.resolve(__dirname, '../client/index'), { loginLink });
 });
 
 app.get(
-	'/auth_callback',
-	oAuthController.getToken,
-	oAuthController.getUserData,
-	userController.addUser,
-	(req, res, next) => {
-		return res.redirect('/home');
-	}
+  '/auth_callback',
+  oAuthController.getToken,
+  oAuthController.getUserData,
+  userController.addUser,
+  (req, res, next) => {
+    return res.redirect('/home');
+  }
 );
 
 app.get('/home', (req, res) => {
-	if (!req.cookies.jwt) {
-		// We haven't logged in
-		return res.redirect('/');
-	}
-	// Create an OAuth2 client object from the credentials in our config file
-	const oauth2Client = new OAuth2(
-		CONFIG.oauth2Credentials.client_id,
-		CONFIG.oauth2Credentials.client_secret,
-		CONFIG.oauth2Credentials.redirect_uris[0]
-	);
-	// Add this specific user's credentials to our OAuth2 client
-	oauth2Client.credentials = jwt.verify(req.cookies.jwt, CONFIG.JWTsecret);
+  if (!req.cookies.jwt) {
+    // We haven't logged in
+    return res.redirect('/');
+  }
+  // Create an OAuth2 client object from the credentials in our config file
+  const oauth2Client = new OAuth2(
+    CONFIG.oauth2Credentials.client_id,
+    CONFIG.oauth2Credentials.client_secret,
+    CONFIG.oauth2Credentials.redirect_uris[0]
+  );
+  // Add this specific user's credentials to our OAuth2 client
+  oauth2Client.credentials = jwt.verify(req.cookies.jwt, CONFIG.JWTsecret);
 
-	return res.render(path.resolve(__dirname, '../client/home'));
+  return res.render(path.resolve(__dirname, '../client/home'));
 });
 
+app.get('/clubs',
+  groupsController.getGroups,
+  (req, res) => {
+    return res.status(200).json(res.locals.groups);
+  });
+
+app.post('/podcasts', podcastsController.getPodcasts ,(req, res) => {
+  console.log('podcasts');
+  return res.status(200).json(res.locals.podcasts);
+});
 app.post('/adduser', userController.addUser, (req, res) => {
-	return res.status(200).json(res.locals.user);
+  return res.status(200).json(res.locals.user);
 });
 
 app.post('/addpodcast', podcastsController.addPodcast, (req, res) => {
-	return res.status(200).json(res.locals.podcast);
+  return res.status(200).json(res.locals.podcast);
 });
 
 app.delete('/deletepodcast',podcastsController.deletePodcast,(req, res) => {
-		return res.status(200).json(res.locals.podcast);
-	}
+  return res.status(200).json(res.locals.podcast);
+}
 );
 
 app.post('/addgroup', groupsController.addGroup, (req, res) => {
-	return res.status(200).json(res.locals.group);
+  return res.status(200).json(res.locals.group);
 });
 
 app.delete('/deletegroup',groupsController.deleteGroup,(req, res) => {
-		return res.status(200).json(res.locals.group);
-	}
+  return res.status(200).json(res.locals.group);
+}
 );
 
 app.post('/addcomment', commentsController.addComment, (req, res) => {
@@ -129,23 +139,23 @@ app.delete('/deletevote',votesController.deleteVote,(req, res) => {
 //////////////////////////////////
 // Unknown Endpoint Error Handler
 app.use('/', (req, res) => {
-	return res.status(404).json('404 Endpoint Not Found');
+  return res.status(404).json('404 Endpoint Not Found');
 });
 
 // Global Error Handler
 app.get('/', (req, res, next, err) => {
-	const defaultErr = {
-		log: 'Express error handler caught unknown middleware error',
-		status: 500,
-		message: { err: 'An error occured' },
-	};
-	const errorObj = Object.assign(defaultErr, err);
-	return res.status(errorObj.status).json(errorObj.message);
+  const defaultErr = {
+    log: 'Express error handler caught unknown middleware error',
+    status: 500,
+    message: { err: 'An error occured' },
+  };
+  const errorObj = Object.assign(defaultErr, err);
+  return res.status(errorObj.status).json(errorObj.message);
 });
 
 // Open up server on PORT
 app.listen(PORT, () => {
-	console.log(`server is listening on port ${PORT}`);
+  console.log(`server is listening on port ${PORT}`);
 });
 
 module.exports = app;

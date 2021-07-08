@@ -13,12 +13,13 @@ const groupsController = {};
   
 // GET ALL GROUPS
 groupsController.getGroups = (req, res, next) => {
-   
-  const groupQuery = 'SELECT * FROM "public"."groups" LIMIT 100';
+  console.log('BODY ', req.body);
+  const groupQuery = 'SELECT * FROM groups';
    
   db.query(groupQuery)
     .then((data) => {
       res.locals.groups = data.rows;
+      console.log('RES LOCALS: ', res.locals.groups);
       return next();
     })
     .catch((err) => next({
@@ -29,15 +30,15 @@ groupsController.getGroups = (req, res, next) => {
  
 // POST A GROUP
 groupsController.addGroup = (req, res, next) => {
-  const {group_name, created_at} = req.body;
-     
-  const groupPost = `INSERT INTO groups (group_name, created_at)
-   VALUES ($1, $2) RETURNING group_id;`;
+  const {group_name } = req.body;
+  console.log(group_name);
+  const groupPost = 'INSERT INTO groups (group_name, created_at) VALUES ($1, current_timestamp) RETURNING *';
  
-  const params = [group_name, created_at];
+  const params = [group_name];
  
   db.query(groupPost, params)
     .then((data) => {
+      console.log('data ', data.rows[0]);
       res.locals.group = data.rows[0];
       return next();
     })
