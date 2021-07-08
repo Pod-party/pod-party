@@ -13,12 +13,13 @@ const groupsController = {};
   
 // GET ALL GROUPS
 groupsController.getGroups = (req, res, next) => {
-   
-  const groupQuery = 'SELECT * FROM "public"."groups" LIMIT 100';
+  console.log('BODY ', req.body);
+  const groupQuery = 'SELECT * FROM groups';
    
   db.query(groupQuery)
     .then((data) => {
       res.locals.groups = data.rows;
+      console.log('RES LOCALS: ', res.locals.groups);
       return next();
     })
     .catch((err) => next({
