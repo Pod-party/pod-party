@@ -47,11 +47,13 @@ const HomePage = (props) => {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
+
         newClub
       })
     })
       .then((res) => res.json())
       .catch(res => console.log('Error in sending group', res));
+
   };
 
   const handleClub = (e) => {
