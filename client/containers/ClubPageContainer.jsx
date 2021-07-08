@@ -38,11 +38,31 @@ const ClubPageContainer = (props) => {
       });
   }, [groupId]);
 
+
+  useEffect(() => {
+    console.log('PODCAST Container', props.groupId);
+    fetch('/podcasts',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          group_id: props.groupId,
+        })
+      }
+    ).then((response) => {
+      return response.json();
+    }).then((data) => {
+      console.log('GET MESSAGES ', data);
+    }).catch(err => console.log(err));
+  }, [groupId]);
+
   console.log('club page container, ', props.groupId);
   return (
     <div>
       <h2>{props.name} Podcast Club</h2>
-      <PodcastClub groupId={props.groupId} setPodcasts ={setPodcasts}/>
+      <PodcastClub groupId={props.groupId} setPodcasts={setPodcasts} podcasts={podcasts}/>
       <h3>Group Chat (coming soon)</h3>
       <br></br>
       <h3>Currently listening to...</h3>

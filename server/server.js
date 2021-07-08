@@ -94,6 +94,11 @@ app.post('/adduser', userController.addUser, (req, res) => {
   return res.status(200).json(res.locals.user);
 });
 
+app.post('/messages', (req, res) => {
+  console.log(req.body);
+  return res.status(200).json('MESSAGES');
+});
+
 app.post('/addpodcast', podcastsController.addPodcast, (req, res) => {
   return res.status(200).json(res.locals.podcast);
 });
