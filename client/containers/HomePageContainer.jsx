@@ -5,7 +5,7 @@ const HomePageContainer = (props) => {
 
   return (
     <div>
-      <h1>User Home Page</h1>
+      <h1>Pod Party!</h1>
       <HomePage />
     </div>
   );

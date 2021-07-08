@@ -11,17 +11,6 @@ const HomePage = (props) => {
   const [newClub, addNewClub] = useState('');
   const [clubs, setClubs] = useState([]);
 
-  // useEffect(() => {
-  //   fetch('/club')
-  //     .then((res) => res.json())
-  //     .then(data => {
-  //       let groups = [];
-  //       data.forEach(element => groups.push(element.name))
-  //     })
-  //     .catch((err) => {
-  //       console.log('Error in getting clubs', err);
-  //     })
-  // }, [])
   const addClub = () => {
     const copy = [...clubs];
     copy.push(newClub);
@@ -30,9 +19,17 @@ const HomePage = (props) => {
 
   const routesArray = [];
   const clubsArray = [];
+  const linksArray = [];
   for (const club of clubs) {
-    routesArray.push(<Route exact path={'/yo'}><ClubPageContainer /></Route>);
+    routesArray.push(
+      <Route exact path={`/${club}`}>
+        <ClubPageContainer name={club}/>
+      </Route>);
     clubsArray.push(<NewClub name={club} />);
+    linksArray.push(
+      <div>
+        <Link to={`/${club}`}>{club}</Link>
+      </div>);
   }
 
 
@@ -53,7 +50,6 @@ const HomePage = (props) => {
     })
       .then((res) => res.json())
       .catch(res => console.log('Error in sending group', res));
-
   };
 
   const handleClub = (e) => {
@@ -72,16 +68,12 @@ const HomePage = (props) => {
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         <Router>
+          {linksArray}
           <Switch>
-            {/* {routesArray} */}
-            <Route exact path='/yo'>
-              <h1>YOOOOOOO</h1>
-              <ClubPageContainer />
-            </Route>
+            {routesArray}
           </Switch>
         </Router>
       </Box>
-      {clubsArray}
     </div>
   );
 };
