@@ -12,7 +12,9 @@ const Podcasts = (props) => {
 
   return (
     <div>
-      <h4>{props.podcast_name} by {props.author}</h4>
+      <li>
+        <h4>{props.podcast_name} by {props.author}</h4>
+      </li>
       {/* <p>You voted on this podcast {count} times</p>
       <button onClick={() => setCount(count + 1)}>`Votes: ${count}`</button>
       <button onClick={() => removePodcast(remove)}>X</button>

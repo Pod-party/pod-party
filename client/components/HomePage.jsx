@@ -32,7 +32,6 @@ const HomePage = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         const copy = [...clubs];
         copy.push(data);
         setClubs(copy);
@@ -52,10 +51,8 @@ const HomePage = (props) => {
     const tempClubsArray = [];
     const tempLinksArray = [];
 
-    console.log('inside renderClubs ', clubs);
     for (const club of clubs) {
       // note: club is now an object with properties, club_id, club_name
-      console.log(club);
       tempRoutesArray.push(
         <Route exact path={`/${club.group_name}`}>
           <ClubPageContainer name={club.group_name} groupId={club.group_id} />
@@ -68,9 +65,6 @@ const HomePage = (props) => {
     setRoutesArray(tempRoutesArray);
     setClubsArray(tempClubsArray);
     setLinksArray(tempLinksArray);
-    console.log('inside renderClubs, routesArray ', routesArray);
-    console.log('inside renderClubs, routesArray ', clubsArray);
-    console.log('inside renderClubs, routesArray ', linksArray);
   };
 
   useEffect(() => {
@@ -83,13 +77,8 @@ const HomePage = (props) => {
     fetch('/clubs')
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setClubs(data);
-        console.log('AFTER setClubs ', clubs);
         return data;
-      }).then((data) => {
-        console.log('before we invoke renderClubs ', clubs);
-        // renderClubs(data);
       })
       .catch(res => console.log('Error in getting clubs', res));
   }, []);
@@ -98,18 +87,6 @@ const HomePage = (props) => {
     renderClubs();
   }, [ clubs ]);
 
-  // useEffect(() => {
-  //   fetch('/podcasts')
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       console.log('PODCASTS: ', data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
   console.log(email);
 
   const handleSubmit = (e) => {
@@ -135,7 +112,6 @@ const HomePage = (props) => {
     addNewClub(e.target.value);
   };
 
-  console.log('Homepage rendered');
   return (
 
     <div style={{ width: '100%' }}>

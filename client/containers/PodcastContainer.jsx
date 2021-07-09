@@ -4,14 +4,15 @@ import Podcasts from '../components/Podcasts.jsx';
 
 const PodcastContainer = (props) => {
 
-  console.log('PODCAST CONTAINER, ', props.podcasts);
   const podcasts = [];
   for (const podcast of props.podcasts){
     podcasts.push(<Podcasts podcast_name={podcast.podcast_name} author={podcast.author}/>);
   }
   return (
     <div>
-      {podcasts}
+      <ul>
+        {podcasts}
+      </ul>
     </div>
   );
 };
