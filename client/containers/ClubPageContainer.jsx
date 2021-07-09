@@ -10,11 +10,11 @@ import Box from '@material-ui/core/Box';
 
 const ClubPageContainer = (props) => {
 
-  const [groupId, setGroupId ] = useState(props.groupId);
+  const [groupId, setGroupId] = useState(props.groupId);
   const [podcasts, setPodcasts] = useState([]);
   const [messages, setMessages ] = useState([]);
   const [email, setEmail ] = useState('');
-
+  
   useEffect(() => {
     setGroupId(props.groupId);
   });
@@ -119,7 +119,7 @@ const ClubPageContainer = (props) => {
       </ul>
       <br></br>
       <h3>Currently listening to...</h3>
-      <PodcastContainer groupId={props.groupId} podcasts={podcasts}/>
+      <PodcastContainer groupId={props.groupId} podcasts={podcasts} />
     </div>
   );
 };

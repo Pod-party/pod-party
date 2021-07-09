@@ -14,7 +14,7 @@ const HomePage = (props) => {
   const [routesArray, setRoutesArray] = useState([]);
   const [clubsArray, setClubsArray] = useState([]);
   const [linksArray, setLinksArray] = useState([]);
-  const [podcasts, setPodcasts ] = useState([]);
+  const [podcasts, setPodcasts] = useState([]);
 
   const addClub = () => {
 
@@ -85,7 +85,7 @@ const HomePage = (props) => {
 
   useEffect(() => {
     renderClubs();
-  }, [ clubs ]);
+  }, [clubs]);
 
   console.log(email);
 
@@ -114,16 +114,16 @@ const HomePage = (props) => {
 
   return (
 
-    <div style={{ width: '100%' }}>
-      <Box display="flex" justifyContent="center" alignItems="center">
+    <div>
+      <Box display="flex" justifyContent="center" alignItems="center" style={{ width: '100%' }} color="primary">
         <form id="GroupForm" method="POST" action="/club/add" onSubmit={handleSubmit}>
-          <TextField label='club' name='club' variant="outlined" onChange={handleClub}></TextField>
-          <Button type="button" variant="outlined" onClick={() => addClub()}>Add Club</Button>
+          <TextField label='club' name='club' variant="outlined" style={{ width: '100%' }} onChange={handleClub}></TextField><br></br>
+          <Button type="button" display="flex" justifyContent="center" alignItems="center" variant="outlined" style={{ margin: 20 }} onClick={() => addClub()}>Add Club</Button>
         </form>
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         <Router>
-          <ul>
+          <ul id="podcasts-list">
             {linksArray}
           </ul>
           <Switch>

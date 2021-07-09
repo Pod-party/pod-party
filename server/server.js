@@ -41,6 +41,7 @@ const PORT = 3000;
 app.use(express.json()); // parses request body
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // parse cookie header and populate the property req.cookies
+app.use(express.static(path.resolve(__dirname, '../docs')));
 
 // Setting up EJS Views
 app.set('view engine', 'ejs');

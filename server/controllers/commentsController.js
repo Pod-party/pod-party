@@ -41,7 +41,7 @@ commentsController.getUserId = (req, res, next) => {
       return next();
     })
     .catch((err) => next(err));
-}
+};
 // POST A COMMENT
 commentsController.addComment = (req, res, next) => {
   const {comment, group_id } = req.body;
