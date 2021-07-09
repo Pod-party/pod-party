@@ -77,13 +77,13 @@ const PodcastClub = (props) => {
     <div style={{ width: '100%' }}>
       <Box display="flex" justifyContent="center" alignItems="center">
         <form id="PodcastForm" method="POST" action="/club/addPodcast">
-          <TextField label='podcast' name='podcast' variant="outlined" onChange={handlePodcast}></TextField>
+          <TextField label='podcast' name='podcast' variant="outlined" style={{ margin: 20 }} onChange={handlePodcast}></TextField>
           <Button type='button' variant="outlined" onClick={() => postPodcast()}>Add Podcast</Button>
         </form>
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         <form id="PodcastForm" method="POST" action="/club/addPodcast">
-          <TextField label='friend' name='friend' variant="outlined" onChange={handleFriend}></TextField>
+          <TextField label='friend' name='friend' variant="outlined" style={{ margin: 20 }} onChange={handleFriend}></TextField>
           <Button type='button' onClick={() => window.alert('friends feature coming soon!')} variant="outlined">Add Friend</Button>
         </form>
       </Box>
