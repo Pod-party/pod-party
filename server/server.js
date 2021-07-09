@@ -49,6 +49,8 @@ app.set('views', __dirname);
 
 /** ****************** Server Route Handlers *********************** */
 
+app.use(express.static(path.resolve(__dirname, '../public'))); // potentially unecessary
+
 // Generate the Authentication Link and Render the index.ejs file to client
 app.get('/', oAuthController.generateAuthUrl, (req, res) => {
   const { loginLink } = res.locals;
@@ -118,16 +120,16 @@ app.delete('/deletegroup',groupsController.deleteGroup,(req, res) => {
 );
 
 app.post('/getcomments', commentsController.getComments, (req, res) => {
-	return res.status(200).json(res.locals.comments);
+  return res.status(200).json(res.locals.comments);
 });
 
-app.post('/addcomment', commentsController.addComment, (req, res) => {
-	return res.status(200).json(res.locals.comment);
+app.post('/addcomment', commentsController.getUserId, commentsController.addComment, (req, res) => {
+  return res.status(200).json(res.locals);
 });
 
 app.delete('/deletecomment',commentsController.deleteComment,(req, res) => {
-		return res.status(200).json(res.locals.comment);
-	}
+  return res.status(200).json(res.locals.comment);
+}
 );
 
 app.post('/addupvote', votesController.upvote, (req, res) => {
@@ -135,16 +137,16 @@ app.post('/addupvote', votesController.upvote, (req, res) => {
 });
 
 app.post('/adddownvote', votesController.downvote, (req, res) => {
-	return res.status(200).json(res.locals.vote);
+  return res.status(200).json(res.locals.vote);
 });
 
 app.delete('/deletevote',votesController.deleteVote,(req, res) => {
-		return res.status(200).json(res.locals.vote);
-	}
+  return res.status(200).json(res.locals.vote);
+}
 );
 
 
-//////////////////////////////////
+/// ///////////////////////////////
 // Unknown Endpoint Error Handler
 app.use('/', (req, res) => {
   return res.status(404).json('404 Endpoint Not Found');

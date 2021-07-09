@@ -14,8 +14,7 @@ const commentsController = {};
 // GET ALL COMMENTS
 commentsController.getComments = (req, res, next) => {
   const {group_id} = req.body;
-  const commentQuery = `SELECT * FROM comments 
-  WHERE group_id = $1 LIMIT 100;`;
+  const commentQuery = 'SELECT comments.comment, users.first_name FROM comments LEFT JOIN users ON comments.user_id = users.user_id where comments.group_id = $1;';
   
   const params = [group_id];
   db.query(commentQuery,params)
@@ -29,15 +28,30 @@ commentsController.getComments = (req, res, next) => {
     }));
 };
 
+commentsController.getUserId = (req, res, next) => {
+  const query = 'SELECT user_id, first_name from users WHERE email=$1;';
+  const { email } = req.body;
+  const parameters = [email];
+  db.query(query, parameters)
+    .then((data) => {
+      console.log(data.rows);
+      res.locals.user_id = data.rows[0].user_id;
+      res.locals.first_name = data.rows[0].first_name;
+      console.log(res.locals.user_id);
+      return next();
+    })
+    .catch((err) => next(err));
+};
 // POST A COMMENT
 commentsController.addComment = (req, res, next) => {
-  const {comment, group_id, user_id, created_at} = req.body;
+  const {comment, group_id } = req.body;
     
-  const commentPost = `INSERT INTO comments (comment, group_id, user_id, created_at)
-    VALUES ($1, $2, $3, $4) RETURNING comment_id;`;
+  console.log(req.body);
+  const commentPost = 'INSERT INTO comments (comment, group_id, user_id, created_at) VALUES ($1, $2, $3, current_timestamp) RETURNING *;';
 
-  const params = [comment, group_id, user_id, created_at];
+  const params = [comment, group_id, res.locals.user_id ];
 
+  console.log('ADD COMMENT ' ,res.locals.user_id);
   db.query(commentPost, params)
     .then((data) => {
       res.locals.comment = data.rows[0];
